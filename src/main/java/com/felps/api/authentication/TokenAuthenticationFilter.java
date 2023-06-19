@@ -58,7 +58,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     if (optionalUser.isPresent()) {
       var user = optionalUser.get();
 
-      var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getRoles());
+      var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null,
+          user.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
   }

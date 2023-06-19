@@ -15,6 +15,7 @@ import com.felps.api.model.Role;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.UserRepository;
 import com.felps.api.web.user.CreateUserForm;
+import com.felps.api.web.user.UpdateUserForm;
 
 @Service
 public class UserService {
@@ -43,19 +44,36 @@ public class UserService {
     BeanUtils.copyProperties(form, userAccount);
     userAccount.setPassword(encoder.encode(form.getPassword()));
 
-    var userRoles = userAccount.getRoles();
-
     var role = new Role(form.getRole().getId());
 
-    userRoles.add(role);
-
-    userAccount.setRoles(userRoles);
+    userAccount.getRoles().add(role);
 
     return userRepository.save(userAccount);
   }
 
   public List<UserAccount> listAll() {
     return userRepository.findAll();
+  }
+
+  @Transactional
+  public UserAccount updateUser(UUID userId, UpdateUserForm form) {
+    Optional<UserAccount> user = userRepository.findById(userId);
+
+    if (!user.isPresent()) {
+      throw new RuntimeException("User Not Exists");
+    }
+
+    var userAccount = new UserAccount();
+
+    BeanUtils.copyProperties(form, userAccount);
+    userAccount.setId(userId);
+
+    var role = new Role(form.getRole().getId());
+
+    userAccount.getRoles().add(role);
+    userAccount.setPassword(user.get().getPassword());
+
+    return userRepository.save(userAccount);
   }
 
 }
