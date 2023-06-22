@@ -27,7 +27,6 @@ import com.felps.api.web.user.dto.UserDTO;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
   @Autowired
   private UserService userService;
@@ -45,6 +44,7 @@ public class UserController {
   }
 
   @GetMapping
+  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<List<UserDTO>> list() {
     var users = userService.listAll();
 

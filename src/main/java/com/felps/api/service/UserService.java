@@ -47,6 +47,7 @@ public class UserService {
     var role = new Role(form.getRole().getId());
 
     userAccount.getRoles().add(role);
+    userAccount.setActive(true);
 
     return userRepository.save(userAccount);
   }

@@ -30,7 +30,11 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth").permitAll().anyRequest().authenticated().and().csrf()
+    http.authorizeRequests()
+        .antMatchers(HttpMethod.POST, "/auth").permitAll()
+        .antMatchers(HttpMethod.POST, "/users").permitAll()
+        .anyRequest().authenticated()
+        .and().csrf()
         .disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .addFilterBefore(new TokenAuthenticationFilter(tokenService, userService),
             UsernamePasswordAuthenticationFilter.class);
