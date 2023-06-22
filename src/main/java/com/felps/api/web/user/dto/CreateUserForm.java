@@ -1,4 +1,4 @@
-package com.felps.api.web.user;
+package com.felps.api.web.user.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
