@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import com.felps.api.model.Role;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.UserRepository;
-import com.felps.api.web.user.CreateUserForm;
-import com.felps.api.web.user.UpdateUserForm;
+import com.felps.api.web.user.dto.CreateUserForm;
+import com.felps.api.web.user.dto.UpdateUserForm;
 
 @Service
 public class UserService {
