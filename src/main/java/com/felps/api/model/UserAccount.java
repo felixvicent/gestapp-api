@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -46,6 +47,9 @@ public class UserAccount implements UserDetails {
   private String password;
 
   private boolean active;
+
+  @OneToMany(mappedBy = "user")
+  private Set<Category> categories;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id")
