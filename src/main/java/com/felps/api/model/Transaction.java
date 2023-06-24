@@ -1,31 +1,29 @@
 package com.felps.api.model;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "categories")
-public class Category {
-
+@Entity
+@Table(name = "transactions")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
@@ -35,12 +33,15 @@ public class Category {
   @JsonBackReference
   private UserAccount user;
 
-  @OneToMany(mappedBy = "category")
-  @JsonManagedReference
-  private List<Transaction> transactions;
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  @JsonBackReference
+  private Category category;
 
-  private String title;
+  private String description;
 
-  @Enumerated(EnumType.STRING)
-  private CategoryType type;
+  private double value;
+
+  private LocalDateTime datetime;
+
 }

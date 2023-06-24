@@ -7,7 +7,7 @@ import com.felps.api.model.CategoryType;
 import lombok.Data;
 
 @Data
-public class CreateCategoryForm {
+public class CategoryForm {
   @NotBlank
   private String title;
 

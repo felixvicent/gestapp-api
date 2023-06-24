@@ -24,6 +24,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -49,7 +51,12 @@ public class UserAccount implements UserDetails {
   private boolean active;
 
   @OneToMany(mappedBy = "user")
+  @JsonManagedReference
   private Set<Category> categories;
+
+  @OneToMany(mappedBy = "user")
+  @JsonManagedReference
+  private Set<Transaction> transactions;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinColumn(name = "role_id")

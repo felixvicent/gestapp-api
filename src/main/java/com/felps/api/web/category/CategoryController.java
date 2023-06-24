@@ -23,7 +23,7 @@ import com.felps.api.model.Category;
 import com.felps.api.model.UserAccount;
 import com.felps.api.service.CategoryService;
 import com.felps.api.web.category.dto.CategoryDTO;
-import com.felps.api.web.category.dto.CreateCategoryForm;
+import com.felps.api.web.category.dto.CategoryForm;
 
 @RestController
 @RequestMapping("/categories")
@@ -41,7 +41,7 @@ public class CategoryController {
 
   @PostMapping
   public ResponseEntity<CategoryDTO> store(@AuthenticationPrincipal UserAccount user,
-      @RequestBody @Valid CreateCategoryForm form) {
+      @RequestBody @Valid CategoryForm form) {
 
     Category newCategory = categoryService.create(form, user);
 
@@ -51,7 +51,7 @@ public class CategoryController {
 
   @PutMapping("/{categoryId}")
   public ResponseEntity<CategoryDTO> update(@AuthenticationPrincipal UserAccount user,
-      @RequestBody @Valid CreateCategoryForm form, @PathVariable UUID categoryId) {
+      @RequestBody @Valid CategoryForm form, @PathVariable UUID categoryId) {
 
     Category updatedCategory = categoryService.update(form, categoryId, user);
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.felps.api.model.Category;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.CategoryRepository;
-import com.felps.api.web.category.dto.CreateCategoryForm;
+import com.felps.api.web.category.dto.CategoryForm;
 
 @Service
 public class CategoryService {
@@ -22,7 +22,7 @@ public class CategoryService {
     return categoryRepository.findByUser(user);
   }
 
-  public Category create(CreateCategoryForm form, UserAccount user) {
+  public Category create(CategoryForm form, UserAccount user) {
     UserAccount loggedUser = new UserAccount();
     Category newCategory = new Category();
 
@@ -34,7 +34,7 @@ public class CategoryService {
     return categoryRepository.save(newCategory);
   }
 
-  public Category update(CreateCategoryForm form, UUID categoryId, UserAccount user) {
+  public Category update(CategoryForm form, UUID categoryId, UserAccount user) {
     Optional<Category> category = categoryRepository.findById(categoryId);
 
     if (!category.isPresent()) {
