@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.felps.api.exceptions.NoHasPermissionException;
+import com.felps.api.exceptions.ResourceNotFoundException;
 import com.felps.api.model.Category;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.CategoryRepository;
@@ -38,11 +40,11 @@ public class CategoryService {
     Optional<Category> category = categoryRepository.findById(categoryId);
 
     if (!category.isPresent()) {
-      throw new RuntimeException("Category Not Exists");
+      throw new ResourceNotFoundException("Category Not Exists");
     }
 
     if (!category.get().getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("Not have permissions");
+      throw new NoHasPermissionException("Not have permissions");
     }
 
     Category updatedCategory = new Category();
@@ -61,11 +63,11 @@ public class CategoryService {
     Optional<Category> category = categoryRepository.findById(categoryId);
 
     if (!category.isPresent()) {
-      throw new RuntimeException("Category Not Exists");
+      throw new ResourceNotFoundException("Category Not Exists");
     }
 
     if (!category.get().getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("Not have permissions");
+      throw new NoHasPermissionException("Not have permissions");
     }
 
     categoryRepository.delete(category.get());

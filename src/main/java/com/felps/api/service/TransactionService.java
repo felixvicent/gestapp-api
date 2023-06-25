@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.felps.api.exceptions.NoHasPermissionException;
+import com.felps.api.exceptions.ResourceNotFoundException;
 import com.felps.api.model.Category;
 import com.felps.api.model.Transaction;
 import com.felps.api.model.UserAccount;
@@ -32,7 +34,7 @@ public class TransactionService {
     Optional<Category> category = categoryRepository.findById(form.getCategoryId());
 
     if (!category.isPresent()) {
-      throw new RuntimeException("Category not exists");
+      throw new ResourceNotFoundException("Category not exists");
     }
 
     loggedUser.setId(user.getId());
@@ -52,14 +54,14 @@ public class TransactionService {
     Optional<Category> category = categoryRepository.findById(form.getCategoryId());
 
     if (!transaction.isPresent()) {
-      throw new RuntimeException("Transaction not exists");
+      throw new ResourceNotFoundException("Transaction not found");
     }
 
     if (!category.isPresent()) {
-      throw new RuntimeException("Category not exists");
+      throw new ResourceNotFoundException("Category not exists");
     }
     if (!transaction.get().getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("Not have permissions");
+      throw new NoHasPermissionException("Not have permissions");
     }
 
     loggedUser.setId(user.getId());
@@ -79,11 +81,11 @@ public class TransactionService {
     Optional<Transaction> transaction = transactionRepository.findById(transactionId);
 
     if (!transaction.isPresent()) {
-      throw new RuntimeException("Transaction Not Exists");
+      throw new ResourceNotFoundException("Transaction Not Exists");
     }
 
     if (!transaction.get().getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("Not have permissions");
+      throw new NoHasPermissionException("Not have permissions");
     }
 
     transactionRepository.delete(transaction.get());

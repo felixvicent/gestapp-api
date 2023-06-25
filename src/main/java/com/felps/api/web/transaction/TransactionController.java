@@ -44,40 +44,30 @@ public class TransactionController {
   public ResponseEntity<TransactionDTO> store(@AuthenticationPrincipal UserAccount user,
       @RequestBody @Valid TransactionForm form) {
 
-    try {
-      Transaction newTransaction = transactionService.create(form, user);
+    Transaction newTransaction = transactionService.create(form, user);
 
-      return ResponseEntity.status(HttpStatus.CREATED)
-          .body(parseEntityToDTO(newTransaction));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(null);
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(parseEntityToDTO(newTransaction));
+
   }
 
   @PutMapping("/{transactionId}")
   public ResponseEntity<TransactionDTO> update(@AuthenticationPrincipal UserAccount user,
       @RequestBody @Valid TransactionForm form, @PathVariable UUID transactionId) {
-    try {
-      Transaction updatedTransaction = transactionService.update(form, transactionId, user);
+    Transaction updatedTransaction = transactionService.update(form, transactionId, user);
 
-      return ResponseEntity.status(HttpStatus.OK)
-          .body(parseEntityToDTO(updatedTransaction));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(null);
-    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(parseEntityToDTO(updatedTransaction));
+
   }
 
   @DeleteMapping("/{transactionId}")
   public ResponseEntity<?> delete(@AuthenticationPrincipal UserAccount user,
       @PathVariable UUID transactionId) {
 
-    try {
-      transactionService.delete(transactionId, user);
+    transactionService.delete(transactionId, user);
 
-      return ResponseEntity.noContent().build();
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(null);
-    }
+    return ResponseEntity.noContent().build();
 
   }
 

@@ -33,14 +33,10 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<Object> store(@RequestBody @Valid CreateUserForm form) {
-    try {
-      UserAccount newUser = userService.createUser(form);
-      return ResponseEntity.status(HttpStatus.CREATED)
-          .body(UserDTO.builder().id(newUser.getId()).name(newUser.getName()).email(newUser.getEmail())
-              .active(newUser.isActive()).build());
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body("User already exists");
-    }
+    UserAccount newUser = userService.createUser(form);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(UserDTO.builder().id(newUser.getId()).name(newUser.getName()).email(newUser.getEmail())
+            .active(newUser.isActive()).build());
   }
 
   @GetMapping
@@ -58,14 +54,10 @@ public class UserController {
   @PutMapping("/{userId}")
   public ResponseEntity<Object> update(@RequestBody @Valid UpdateUserForm form,
       @PathVariable UUID userId) {
-    try {
-      UserAccount updatedUser = userService.updateUser(userId, form);
+    UserAccount updatedUser = userService.updateUser(userId, form);
 
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(UserDTO.builder().id(updatedUser.getId())
-          .name(updatedUser.getName()).email(updatedUser.getEmail()).active(updatedUser.isActive()).build());
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body("User not exists");
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(UserDTO.builder().id(updatedUser.getId())
+        .name(updatedUser.getName()).email(updatedUser.getEmail()).active(updatedUser.isActive()).build());
 
-    }
   }
 }

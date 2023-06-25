@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.felps.api.exceptions.ResourceAlreadyExistsException;
+import com.felps.api.exceptions.ResourceNotFoundException;
 import com.felps.api.model.Role;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.UserRepository;
@@ -37,7 +39,7 @@ public class UserService {
   @Transactional
   public UserAccount createUser(CreateUserForm form) {
     if (this.loadForAuthentication(form.getEmail()).isPresent()) {
-      throw new RuntimeException("User already Exists");
+      throw new ResourceAlreadyExistsException("User already Exists");
     }
 
     var userAccount = new UserAccount();
@@ -61,7 +63,7 @@ public class UserService {
     Optional<UserAccount> user = userRepository.findById(userId);
 
     if (!user.isPresent()) {
-      throw new RuntimeException("User Not Exists");
+      throw new ResourceNotFoundException("User Not Exists");
     }
 
     var userAccount = new UserAccount();
