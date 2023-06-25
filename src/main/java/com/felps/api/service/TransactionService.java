@@ -44,6 +44,7 @@ public class TransactionService {
     BeanUtils.copyProperties(form, newTransaction);
     newTransaction.setUser(loggedUser);
     newTransaction.setCategory(category.get());
+    newTransaction.setType(category.get().getType());
 
     return transactionRepository.save(newTransaction);
   }

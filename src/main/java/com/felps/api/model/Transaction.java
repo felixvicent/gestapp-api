@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +39,9 @@ public class Transaction {
   @JoinColumn(name = "category_id")
   @JsonBackReference
   private Category category;
+
+  @Enumerated(EnumType.STRING)
+  private CategoryType type;
 
   private String description;
 
