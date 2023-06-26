@@ -1,12 +1,14 @@
 package com.felps.api.web.transaction;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.felps.api.model.Transaction;
 import com.felps.api.model.UserAccount;
 import com.felps.api.service.TransactionService;
-import com.felps.api.web.category.dto.CategoryDTO;
 import com.felps.api.web.transaction.dto.TransactionDTO;
 import com.felps.api.web.transaction.dto.TransactionForm;
 
@@ -33,31 +33,31 @@ public class TransactionController {
   private TransactionService transactionService;
 
   @GetMapping
-  public ResponseEntity<List<TransactionDTO>> index(@AuthenticationPrincipal UserAccount user) {
-    List<Transaction> transactions = transactionService.findAll(user);
+  public ResponseEntity<Page<TransactionDTO>> index(
+      @PageableDefault(page = 0, size = 10, sort = "datetime", direction = Sort.Direction.DESC) Pageable pageable,
+      @AuthenticationPrincipal UserAccount user) {
+    Page<TransactionDTO> transactions = transactionService.findAll(user, pageable);
 
-    return ResponseEntity.ok(transactions.stream().map(
-        transaction -> parseEntityToDTO(transaction)).collect(Collectors.toList()));
+    return ResponseEntity.ok(transactions);
   }
 
   @PostMapping
   public ResponseEntity<TransactionDTO> store(@AuthenticationPrincipal UserAccount user,
       @RequestBody @Valid TransactionForm form) {
 
-    Transaction newTransaction = transactionService.create(form, user);
+    TransactionDTO newTransaction = transactionService.create(form, user);
 
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(parseEntityToDTO(newTransaction));
+    return ResponseEntity.status(HttpStatus.CREATED).body(newTransaction);
 
   }
 
   @PutMapping("/{transactionId}")
   public ResponseEntity<TransactionDTO> update(@AuthenticationPrincipal UserAccount user,
       @RequestBody @Valid TransactionForm form, @PathVariable UUID transactionId) {
-    Transaction updatedTransaction = transactionService.update(form, transactionId, user);
+    TransactionDTO updatedTransaction = transactionService.update(form, transactionId, user);
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(parseEntityToDTO(updatedTransaction));
+        .body(updatedTransaction);
 
   }
 
@@ -69,19 +69,5 @@ public class TransactionController {
 
     return ResponseEntity.noContent().build();
 
-  }
-
-  private TransactionDTO parseEntityToDTO(Transaction transaction) {
-    return TransactionDTO.builder()
-        .id(transaction.getId())
-        .description(transaction.getDescription())
-        .value(transaction.getValue())
-        .datetime(transaction.getDatetime())
-        .category(CategoryDTO.builder()
-            .id(transaction.getCategory().getId())
-            .title(transaction.getCategory().getTitle())
-            .type(transaction.getCategory().getType())
-            .build())
-        .build();
   }
 }
