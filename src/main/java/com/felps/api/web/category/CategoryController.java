@@ -1,12 +1,14 @@
 package com.felps.api.web.category;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,11 +34,12 @@ public class CategoryController {
   private CategoryService categoryService;
 
   @GetMapping
-  public ResponseEntity<List<CategoryDTO>> index(@AuthenticationPrincipal UserAccount user) {
-    List<Category> categories = categoryService.findAll(user);
+  public ResponseEntity<Page<CategoryDTO>> index(
+      @PageableDefault(page = 0, size = 10, sort = "title", direction = Sort.Direction.DESC) Pageable pageable,
+      @AuthenticationPrincipal UserAccount user) {
+    Page<CategoryDTO> categories = categoryService.findAll(user, pageable);
 
-    return ResponseEntity.ok(categories.stream().map(category -> CategoryDTO.builder().id(category.getId())
-        .title(category.getTitle()).type(category.getType()).build()).collect(Collectors.toList()));
+    return ResponseEntity.ok(categories);
   }
 
   @PostMapping

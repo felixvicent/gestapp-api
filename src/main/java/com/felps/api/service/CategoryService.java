@@ -1,11 +1,12 @@
 package com.felps.api.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.felps.api.exceptions.NoHasPermissionException;
@@ -13,6 +14,7 @@ import com.felps.api.exceptions.ResourceNotFoundException;
 import com.felps.api.model.Category;
 import com.felps.api.model.UserAccount;
 import com.felps.api.repository.CategoryRepository;
+import com.felps.api.web.category.dto.CategoryDTO;
 import com.felps.api.web.category.dto.CategoryForm;
 
 @Service
@@ -20,8 +22,8 @@ public class CategoryService {
   @Autowired
   private CategoryRepository categoryRepository;
 
-  public List<Category> findAll(UserAccount user) {
-    return categoryRepository.findByUser(user);
+  public Page<CategoryDTO> findAll(UserAccount user, Pageable pageable) {
+    return categoryRepository.findByUser(user, pageable).map(category -> entityToDTO(category));
   }
 
   public Category create(CategoryForm form, UserAccount user) {
@@ -71,6 +73,14 @@ public class CategoryService {
     }
 
     categoryRepository.delete(category.get());
+  }
+
+  private CategoryDTO entityToDTO(Category category) {
+    return CategoryDTO.builder()
+        .id(category.getId())
+        .title(category.getTitle())
+        .type(category.getType())
+        .build();
   }
 
 }
