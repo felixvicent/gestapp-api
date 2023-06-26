@@ -1,6 +1,5 @@
 package com.felps.api.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,6 +7,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import com.felps.api.model.UserAccount;
 import com.felps.api.repository.UserRepository;
 import com.felps.api.web.user.dto.CreateUserForm;
 import com.felps.api.web.user.dto.UpdateUserForm;
+import com.felps.api.web.user.dto.UserDTO;
 
 @Service
 public class UserService {
@@ -54,8 +56,10 @@ public class UserService {
     return userRepository.save(userAccount);
   }
 
-  public List<UserAccount> listAll() {
-    return userRepository.findAll();
+  public Page<UserDTO> listAll(Pageable pageable) {
+    Page<UserDTO> users = userRepository.findAll(pageable).map(user -> entityToDTO(user));
+
+    return users;
   }
 
   @Transactional
@@ -77,6 +81,17 @@ public class UserService {
     userAccount.setPassword(user.get().getPassword());
 
     return userRepository.save(userAccount);
+  }
+
+  private UserDTO entityToDTO(UserAccount user) {
+    return UserDTO.builder()
+        .id(user.getId())
+        .name(user.getName())
+        .email(user.getEmail())
+        .active(user.isActive())
+        .role(user.getRoles().iterator().next().getName())
+        .createdAt(user.getCreatedAt())
+        .build();
   }
 
 }

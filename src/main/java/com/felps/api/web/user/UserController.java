@@ -1,13 +1,14 @@
 package com.felps.api.web.user;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,14 +42,11 @@ public class UserController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<List<UserDTO>> list() {
-    var users = userService.listAll();
+  public ResponseEntity<Page<UserDTO>> list(
+      @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    var users = userService.listAll(pageable);
 
-    return ResponseEntity
-        .ok(users.stream()
-            .map(user -> UserDTO.builder().id(user.getId()).name(user.getName()).email(user.getEmail())
-                .active(user.isActive()).build())
-            .collect(Collectors.toList()));
+    return ResponseEntity.ok(users);
   }
 
   @PutMapping("/{userId}")

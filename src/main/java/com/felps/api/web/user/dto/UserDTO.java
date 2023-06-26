@@ -1,5 +1,6 @@
 package com.felps.api.web.user.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -15,4 +16,8 @@ public class UserDTO {
   private String email;
 
   private Boolean active;
+
+  private String role;
+
+  private LocalDateTime createdAt;
 }
