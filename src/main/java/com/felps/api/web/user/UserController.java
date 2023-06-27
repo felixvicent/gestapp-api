@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.felps.api.model.UserAccount;
 import com.felps.api.service.UserService;
 import com.felps.api.web.user.dto.CreateUserForm;
 import com.felps.api.web.user.dto.UpdateUserForm;
@@ -34,10 +33,8 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<Object> store(@RequestBody @Valid CreateUserForm form) {
-    UserAccount newUser = userService.createUser(form);
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(UserDTO.builder().id(newUser.getId()).name(newUser.getName()).email(newUser.getEmail())
-            .active(newUser.isActive()).build());
+    UserDTO newUser = userService.createUser(form);
+    return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
   }
 
   @GetMapping
@@ -52,10 +49,9 @@ public class UserController {
   @PutMapping("/{userId}")
   public ResponseEntity<Object> update(@RequestBody @Valid UpdateUserForm form,
       @PathVariable UUID userId) {
-    UserAccount updatedUser = userService.updateUser(userId, form);
+    UserDTO updatedUser = userService.updateUser(userId, form);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(UserDTO.builder().id(updatedUser.getId())
-        .name(updatedUser.getName()).email(updatedUser.getEmail()).active(updatedUser.isActive()).build());
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(updatedUser);
 
   }
 }

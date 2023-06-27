@@ -39,7 +39,7 @@ public class UserService {
   }
 
   @Transactional
-  public UserAccount createUser(CreateUserForm form) {
+  public UserDTO createUser(CreateUserForm form) {
     if (this.loadForAuthentication(form.getEmail()).isPresent()) {
       throw new ResourceAlreadyExistsException("User already Exists");
     }
@@ -53,7 +53,7 @@ public class UserService {
     userAccount.getRoles().add(role);
     userAccount.setActive(true);
 
-    return userRepository.save(userAccount);
+    return entityToDTO(userRepository.save(userAccount));
   }
 
   public Page<UserDTO> listAll(Pageable pageable) {
@@ -63,7 +63,7 @@ public class UserService {
   }
 
   @Transactional
-  public UserAccount updateUser(UUID userId, UpdateUserForm form) {
+  public UserDTO updateUser(UUID userId, UpdateUserForm form) {
     Optional<UserAccount> user = userRepository.findById(userId);
 
     if (!user.isPresent()) {
@@ -80,7 +80,7 @@ public class UserService {
     userAccount.getRoles().add(role);
     userAccount.setPassword(user.get().getPassword());
 
-    return userRepository.save(userAccount);
+    return entityToDTO(userRepository.save(userAccount));
   }
 
   private UserDTO entityToDTO(UserAccount user) {
