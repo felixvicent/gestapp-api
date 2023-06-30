@@ -42,11 +42,11 @@ public class CategoryService {
     Optional<Category> category = categoryRepository.findById(categoryId);
 
     if (!category.isPresent()) {
-      throw new ResourceNotFoundException("Category Not Exists");
+      throw new ResourceNotFoundException("Categoria não existe");
     }
 
     if (!category.get().getUser().getId().equals(user.getId())) {
-      throw new NoHasPermissionException("Not have permissions");
+      throw new NoHasPermissionException("Você não tem permissão para essa ação");
     }
 
     Category updatedCategory = new Category();
@@ -65,11 +65,11 @@ public class CategoryService {
     Optional<Category> category = categoryRepository.findById(categoryId);
 
     if (!category.isPresent()) {
-      throw new ResourceNotFoundException("Category Not Exists");
+      throw new ResourceNotFoundException("Categoria não existe");
     }
 
     if (!category.get().getUser().getId().equals(user.getId())) {
-      throw new NoHasPermissionException("Not have permissions");
+      throw new NoHasPermissionException("Você não tem permissão parea essa ação");
     }
 
     categoryRepository.delete(category.get());

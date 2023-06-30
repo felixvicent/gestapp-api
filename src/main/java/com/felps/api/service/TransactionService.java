@@ -85,11 +85,11 @@ public class TransactionService {
     Optional<Transaction> transaction = transactionRepository.findById(transactionId);
 
     if (!transaction.isPresent()) {
-      throw new ResourceNotFoundException("Transaction Not Exists");
+      throw new ResourceNotFoundException("Transação não encontrada");
     }
 
     if (!transaction.get().getUser().getId().equals(user.getId())) {
-      throw new NoHasPermissionException("Not have permissions");
+      throw new NoHasPermissionException("Você não tem permissão para essa ação");
     }
 
     transactionRepository.delete(transaction.get());

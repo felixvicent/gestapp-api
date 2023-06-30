@@ -41,7 +41,7 @@ public class UserService {
   @Transactional
   public UserDTO createUser(CreateUserForm form) {
     if (this.loadForAuthentication(form.getEmail()).isPresent()) {
-      throw new ResourceAlreadyExistsException("User already Exists");
+      throw new ResourceAlreadyExistsException("Usuário já existe");
     }
 
     var userAccount = new UserAccount();
@@ -67,7 +67,7 @@ public class UserService {
     Optional<UserAccount> user = userRepository.findById(userId);
 
     if (!user.isPresent()) {
-      throw new ResourceNotFoundException("User Not Exists");
+      throw new ResourceNotFoundException("Usuário já existe");
     }
 
     var userAccount = new UserAccount();
