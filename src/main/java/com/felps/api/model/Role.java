@@ -23,6 +23,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Role implements GrantedAuthority {
 
+  public static final UUID ADMIN_ROLE_ID = UUID.fromString("04537612-70aa-4439-b679-1b836ef8869d");
+  public static final UUID USER_ROLE_ID = UUID.fromString("7e5600f1-62c1-4694-8441-e22e50692f43");
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;

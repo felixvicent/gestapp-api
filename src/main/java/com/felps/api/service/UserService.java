@@ -48,7 +48,7 @@ public class UserService {
     BeanUtils.copyProperties(form, userAccount);
     userAccount.setPassword(encoder.encode(form.getPassword()));
 
-    var role = new Role(form.getRole().getId());
+    var role = new Role(Role.USER_ROLE_ID);
 
     userAccount.getRoles().add(role);
     userAccount.setActive(true);
