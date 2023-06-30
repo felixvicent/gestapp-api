@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.felps.api.authentication.TokenService;
 import com.felps.api.model.Role;
 import com.felps.api.service.UserService;
+import com.felps.api.web.user.dto.UserDTO;
 
 @RestController
 @RequestMapping("/auth")
@@ -45,8 +46,19 @@ public class AuthenticationController {
     var user = userService.loadForAuthentication(form.getEmail())
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    return new ResponseEntity<>(TokenDTO.builder().type("Bearer").token(token)
-        .roles(user.getRoles().stream().map(Role::getName).toList()).build(), HttpStatus.OK);
+    return new ResponseEntity<>(AuthenticateDTO.builder()
+        .token(TokenDTO.builder().type("Bearer").token(token)
+            .roles(user.getRoles().stream().map(Role::getName).toList()).build())
+        .user(UserDTO.builder()
+            .id(user.getId())
+            .name(user.getName())
+            .email(user.getEmail())
+            .active(user.isActive())
+            .role(user.getRoles().iterator().next().getName())
+            .createdAt(user.getCreatedAt())
+            .build())
+        .build(),
+        HttpStatus.OK);
 
   }
 }
