@@ -27,8 +27,13 @@ public class TokenService {
   }
 
   public String generateToken(UserAccount user) {
-    return Jwts.builder().setIssuer("GestAPP").setSubject(String.valueOf(user.getId())).claim("roles",
-        user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()).setIssuedAt(new Date())
+    return Jwts.builder()
+        .setIssuer("GestAPP")
+        .setSubject(String.valueOf(user.getId()))
+        .claim("roles",
+            user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+        .setIssuedAt(new Date())
+        .setExpiration(new Date((new Date()).getTime() + 1000 * 60 * 60 * 24 * 7))
         .signWith(SignatureAlgorithm.HS256, secret).compact();
   }
 
