@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.felps.api.model.Category;
 import com.felps.api.model.UserAccount;
+import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
   public Page<Category> findByUser(UserAccount user, Pageable pageable);
+
+  List<Category> findByUser(UserAccount user);
 }

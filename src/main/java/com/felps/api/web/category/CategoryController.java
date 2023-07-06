@@ -1,5 +1,6 @@
 package com.felps.api.web.category;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -37,7 +38,15 @@ public class CategoryController {
   public ResponseEntity<Page<CategoryDTO>> index(
       @PageableDefault(page = 0, size = 10, sort = "title", direction = Sort.Direction.DESC) Pageable pageable,
       @AuthenticationPrincipal UserAccount user) {
-    Page<CategoryDTO> categories = categoryService.findAll(user, pageable);
+    Page<CategoryDTO> categories = categoryService.findAllPageable(user, pageable);
+
+    return ResponseEntity.ok(categories);
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<List<CategoryDTO>> getAll(
+      @AuthenticationPrincipal UserAccount user) {
+    List<CategoryDTO> categories = categoryService.findAll(user);
 
     return ResponseEntity.ok(categories);
   }

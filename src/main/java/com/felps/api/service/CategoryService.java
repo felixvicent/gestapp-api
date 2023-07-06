@@ -1,5 +1,6 @@
 package com.felps.api.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,8 +23,18 @@ public class CategoryService {
   @Autowired
   private CategoryRepository categoryRepository;
 
-  public Page<CategoryDTO> findAll(UserAccount user, Pageable pageable) {
+  public Page<CategoryDTO> findAllPageable(UserAccount user, Pageable pageable) {
     return categoryRepository.findByUser(user, pageable).map(category -> entityToDTO(category));
+  }
+
+  public List<CategoryDTO> findAll(UserAccount user) {
+    return categoryRepository.findByUser(user).stream()
+        .map(category -> CategoryDTO.builder()
+            .id(category.getId())
+            .title(category.getTitle())
+            .type(category.getType())
+            .build())
+        .toList();
   }
 
   public Category create(CategoryForm form, UserAccount user) {
