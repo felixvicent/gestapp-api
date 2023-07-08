@@ -16,4 +16,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
 
   @Query(value = "SELECT * FROM transactions WHERE type = ?1 AND user_id = ?2 AND date_part('year', datetime) = ?3", nativeQuery = true)
   List<Transaction> findByTypeUserAndDate(String type, UUID userId, int year);
+
+  @Query(value = "SELECT * FROM transactions WHERE category_id = ?1 AND user_id = ?2 AND date_part('year', datetime) = ?3", nativeQuery = true)
+  List<Transaction> findByCategoryAndTypeAndDatetime(UUID categoryId, UUID userId, int year);
 }
