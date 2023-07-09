@@ -57,7 +57,6 @@ public class SecurityConfiguration {
   public WebSecurityCustomizer webSecurityCustomizer() {
     StrictHttpFirewall firewall = new StrictHttpFirewall();
     firewall.setAllowUrlEncodedDoubleSlash(true);
-    ;
     return (web) -> web.httpFirewall(firewall);
   }
 
