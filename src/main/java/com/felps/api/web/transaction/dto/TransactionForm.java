@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.felps.api.model.CategoryType;
+
 import lombok.Data;
 
 @Data
@@ -21,4 +23,6 @@ public class TransactionForm {
 
   @NotNull
   private UUID categoryId;
+
+  private CategoryType type;
 }

@@ -76,7 +76,7 @@ public class DashboardService {
           .build());
     }
 
-    String message = type == CategoryType.EXPENSE ? "Gasto total": "Ganho total";
+    String message = type == CategoryType.EXPENSE ? "Gasto total" : "Ganho total";
 
     return GraphicDTO.builder().category(message).values(graphic).build();
   }
