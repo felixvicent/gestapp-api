@@ -31,9 +31,6 @@ CREATE TABLE public.categories (
     user_id uuid
 );
 
-
-ALTER TABLE public.categories OWNER TO postgres;
-
 --
 -- Name: roles; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -42,9 +39,6 @@ CREATE TABLE public.roles (
     id uuid NOT NULL,
     name character varying(255)
 );
-
-
-ALTER TABLE public.roles OWNER TO postgres;
 
 --
 -- Name: transactions; Type: TABLE; Schema: public; Owner: postgres
@@ -60,9 +54,6 @@ CREATE TABLE public.transactions (
     user_id uuid
 );
 
-
-ALTER TABLE public.transactions OWNER TO postgres;
-
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -77,9 +68,6 @@ CREATE TABLE public.users (
     updated_at timestamp without time zone
 );
 
-
-ALTER TABLE public.users OWNER TO postgres;
-
 --
 -- Name: users_roles; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -88,9 +76,6 @@ CREATE TABLE public.users_roles (
     user_account_id uuid NOT NULL,
     roles_id uuid NOT NULL
 );
-
-
-ALTER TABLE public.users_roles OWNER TO postgres;
 
 --
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
