@@ -52,12 +52,4 @@ public class SecurityConfiguration {
       throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
   }
-
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    StrictHttpFirewall firewall = new StrictHttpFirewall();
-    firewall.setAllowUrlEncodedDoubleSlash(true);
-    return (web) -> web.httpFirewall(firewall);
-  }
-
 }
