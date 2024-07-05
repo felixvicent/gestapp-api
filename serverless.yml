@@ -15,7 +15,12 @@ build:
 
 provider:
   name: aws
+  region: us-east-1
+  deploymentMethod: direct
+  architeture: arm64
   runtime: nodejs20.x
+  environment:
+    COGNITO_CLIENT_ID: !Ref GestappUserPoolClient
 
 custom:
   esbuild:
@@ -25,14 +30,6 @@ custom:
     outputFileExtension: .mjs
     exclude:
       - '@aws-sdk/*'
-
-functions:
-  hello:
-    handler: handler.hello
-    events:
-      - httpApi:
-          path: /
-          method: get
 
 resources:
   Resources:
@@ -81,4 +78,12 @@ resources:
           RefreshToken: hours
         AccessTokenValidity: 3
         RefreshTokenValidity: 1440 # 60 days
+        
+functions:
+  signUp:
+    handler: src/functions/auth/signUp.handler
+    events:
+      - httpApi:
+          path: /auth/sign-up
+          method: post
         
