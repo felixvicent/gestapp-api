@@ -76,7 +76,7 @@ resources:
         TokenValidityUnits:
           AccessToken: hours
           RefreshToken: hours
-        AccessTokenValidity: 3
+        AccessTokenValidity: 24 # 1 days
         RefreshTokenValidity: 1440 # 60 days
         
 functions:
@@ -91,5 +91,11 @@ functions:
     events:
       - httpApi:
           path: /auth/account-confirmation
+          method: post
+  signIn:
+    handler: src/functions/auth/signIn.handler
+    events:
+      - httpApi:
+          path: /auth/sign-in
           method: post
         
