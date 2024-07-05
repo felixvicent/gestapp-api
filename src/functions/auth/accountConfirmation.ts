@@ -1,7 +1,8 @@
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 import {
-  SignUpCommand,
-  UsernameExistsException,
+  CodeMismatchException,
+  ConfirmSignUpCommand,
+  ExpiredCodeException,
 } from "@aws-sdk/client-cognito-identity-provider";
 
 import { response } from "../../utils/response";
@@ -11,36 +12,35 @@ import { cognitoClient } from "../../libs/cognitoClient";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  code: z.string().length(6),
 });
 
 export async function handler(event: APIGatewayProxyEventV2) {
   try {
     const body = bodyParser(event.body);
-    const { email, firstName, lastName, password } = schema.parse(body);
+    const { email, code } = schema.parse(body);
 
-    const command = new SignUpCommand({
+    const command = new ConfirmSignUpCommand({
       ClientId: process.env.COGNITO_CLIENT_ID,
       Username: email,
-      Password: password,
-      UserAttributes: [
-        { Name: "given_name", Value: firstName },
-        { Name: "family_name", Value: lastName },
-      ],
+      ConfirmationCode: code,
     });
 
-    const { UserSub } = await cognitoClient.send(command);
+    await cognitoClient.send(command);
 
-    return response(201, { userId: UserSub });
+    return response(204);
   } catch (error) {
     if (error instanceof ZodError) {
       return response(400, error);
     }
-    if (error instanceof UsernameExistsException) {
-      return response(409, { error: "Username already in use" });
+
+    if (
+      error instanceof CodeMismatchException ||
+      error instanceof ExpiredCodeException
+    ) {
+      return response(400, { error: "Invalid or expired code" });
     }
+
     return response(500, { error: "Internal Server Error" });
   }
 }
