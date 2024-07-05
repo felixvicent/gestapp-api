@@ -23,6 +23,8 @@ custom:
     format: esm
     minify: true
     outputFileExtension: .mjs
+    exclude:
+      - '@aws-sdk/*'
 
 functions:
   hello:
@@ -31,3 +33,52 @@ functions:
       - httpApi:
           path: /
           method: get
+
+resources:
+  Resources:
+    GestappUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties: 
+        DeletionProtection: ACTIVE
+        UserPoolName: gestappUserPool
+        MfaConfiguration: OFF
+        AutoVerifiedAttributes:
+          - email
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
+        UsernameAttributes:
+          - email
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email
+              Priority: 1
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: false
+            RequireNumbers: false
+            RequireSymbols: false
+            RequireUppercase: false
+        Schema:
+          - Name: given_name
+            Mutable: true
+            Required: true
+            AttributeDataType: String
+          - Name: family_name
+            Mutable: true
+            Required: true
+            AttributeDataType: String
+    GestappUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: GestappUserPoolClient
+        UserPoolId: !Ref GestappUserPool
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        TokenValidityUnits:
+          AccessToken: hours
+          RefreshToken: hours
+        AccessTokenValidity: 3
+        RefreshTokenValidity: 1440 # 60 days
+        
