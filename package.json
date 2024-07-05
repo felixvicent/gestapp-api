@@ -1,0 +1,16 @@
+{
+  "name": "gestapp-api",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "sls offline --reloadHandler"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.140",
+    "esbuild": "^0.20.2",
+    "serverless-esbuild": "^1.52.1",
+    "serverless-offline": "^13.6.0",
+    "typescript": "^5.5.3"
+  }
+}
