@@ -21,6 +21,14 @@ provider:
   runtime: nodejs20.x
   environment:
     COGNITO_CLIENT_ID: !Ref GestappUserPoolClient
+  httpApi:
+    authorizers:
+      CognitoAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: !GetAtt GestappUserPool.ProviderURL
+        audience:
+          - !Ref GestappUserPoolClient
 
 custom:
   esbuild:
